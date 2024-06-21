@@ -10,11 +10,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "@fontsource/inter": "^5.0.18",
     "@heroicons/react": "^2.1.4",
     "@nextui-org/react": "^2.4.2",
+    "@types/dateformat": "^5.0.2",
+    "date-fns": "^3.6.0",
+    "dateformat": "^5.0.3",
     "framer-motion": "^11.2.11",
+    "javascript-time-ago": "^2.5.10",
+    "numeral": "^2.0.6",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.23.1",
+    "react-type-animation": "^3.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

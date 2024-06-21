@@ -17,24 +17,25 @@ import {useState} from "react";
 import {MagnifyingGlassIcon as MagnifyingGlassIconLarge} from "@heroicons/react/24/outline";
 import {XMarkIcon} from "@heroicons/react/24/solid";
 import NavbarAccountData from "../../types/NavbarAccountData.ts";
-
-type PageLink = {
-    href: string;
-    title: string;
-}
+import PageLink from "../../types/PageLink.ts";
+import {NavLink} from "react-router-dom";
 
 const pages: PageLink[] = [
-    { href: "#", title: "Home" },
-    { href: "#", title: "Datasets" },
-    { href: "#", title: "Get started" },
+    { href: "/", title: "Home" },
+    { href: "/datasets", title: "Datasets" },
+    { href: "/get-started", title: "Get started" },
 ]
 
-export default function SiteNavbar() {
+export default function SiteNavbar({
+    currentPage
+}: {
+    currentPage: string
+}) {
 
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [currentPage, setCurrentPage] = useState(pages[0].title)
-    const [loggedIn, setLoggedIn] = useState(true)
+    // const [currentPage, setCurrentPage] = useState(pages[0].title)
+    const [loggedIn, setLoggedIn] = useState(false)
     const [accountData, setAccountData] = useState<undefined | NavbarAccountData>({
         email: "example@gmail.com",
         username: "Jason",
@@ -58,13 +59,15 @@ export default function SiteNavbar() {
                     {
                         pages.map((page, i) => (
                             <NavbarItem key={i}>
-                                <Link
-                                    color={currentPage === page.title ? "primary" : "foreground"}
-                                    aria-current={currentPage === page.title ? "page" : undefined}
-                                    href={page.href}
+                                <NavLink
+                                    // color={currentPage === page.title ? "primary" : "foreground"}
+                                    className={currentPage === page.href ? "text-primary" : "text-foreground"}
+                                    // aria-current={currentPage === page.title ? "page" : undefined}
+                                    // href={page.href}
+                                    to={page.href}
                                 >
                                     {page.title}
-                                </Link>
+                                </NavLink>
                             </NavbarItem>
                         ))
                     }
@@ -86,15 +89,16 @@ export default function SiteNavbar() {
 
                     <Input
                         classNames={{
-                            base: "max-w-full sm:max-w-[12rem] h-12",
+                            base: "max-w-full sm:max-w-[12rem] h-10",
                             mainWrapper: "h-full",
                             input: "text-small",
                             inputWrapper: "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
                         }}
+                        isClearable
                         placeholder="Search datasets..."
                         size="sm"
                         startContent={<MagnifyingGlassIcon className="w-5 h-5 shrink-0" />}
-                        type="search"
+                        // type="search"
                     />
                 </div>
                 </NavbarContent>
@@ -139,7 +143,11 @@ export default function SiteNavbar() {
 
                         <div className={`${isSearchOpen ? 'hidden' : 'flex'} gap-4`}>
                             <NavbarItem className="hidden lg:flex">
-                                <Link href="#">Login</Link>
+                                <NavLink
+                                    className="self-center"
+                                    // href="#"
+                                    to={'/login'}
+                                >Login</NavLink>
                             </NavbarItem>
                             <NavbarItem>
                                 <Button as={Link} color="primary" href="#" variant="flat">
@@ -153,19 +161,32 @@ export default function SiteNavbar() {
             <NavbarMenu>
                 {pages.map((item, index) => (
                     <NavbarMenuItem key={`${item.title}-${index}`}>
-                        <Link
-                            color={
-                                "foreground"
-                                // index === 2 ? "primary" : index === menuItems.length - 1 ? "danger" : "foreground"
-                            }
-                            className="w-full"
-                            href={item.href}
-                            size="lg"
+                        <NavLink
+                            // color={currentPage === item.href ? "primary" : "foreground"}
+                            // aria-current={currentPage === item.title ? "page" : undefined}
+
+                            className={(currentPage === item.href ? "text-primary" : "text-foreground") + " w-full"}
+                            // href={item.href}
+                            to={item.href}
+                            // size="lg"
                         >
                             {item.title}
-                        </Link>
+                        </NavLink>
                     </NavbarMenuItem>
                 ))}
+                {
+                    !loggedIn &&
+                    <NavbarItem>
+                        <NavLink
+                            // color={currentPage === '/login' ? "primary" : "foreground"}
+                            className={(currentPage === '/login' ? "text-primary" : "text-foreground") + " w-full"}
+                            // aria-current={currentPage === 'Login' ? "page" : undefined}
+                            // href="#"
+                            to={'/login'}
+                            // size="lg"
+                        >Login</NavLink>
+                    </NavbarItem>
+                }
             </NavbarMenu>
         </Navbar>
     );
