@@ -3,8 +3,9 @@ This repository is the React frontend for the OpenDiffusion dataset platform.
 The platform is a web application that allows users to upload, and caption image datasets.
 
 
-| ![image](https://github.com/OpenDiffusionAI/dataset-platform-frontend/assets/172853169/88e6f716-798b-4dc0-8814-58aab4907a06) | ![image](https://github.com/OpenDiffusionAI/dataset-platform-frontend/assets/172853169/57748917-22d4-4571-8129-584e4d73d030) |
+| ![image](https://github.com/OpenDiffusionAI/dataset-platform-frontend/assets/172853169/55be53c1-8e75-42cb-bd7f-98a13e273565) | ![image](https://github.com/OpenDiffusionAI/dataset-platform-frontend/assets/172853169/34606456-3956-4fa8-9333-90cb1adfe53d) |
 |:---:|:---:|
+
 
 
 
