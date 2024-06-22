@@ -1,11 +1,13 @@
 import DatasetTask from "./DatasetTask.ts";
 import SiteUserData from "./SiteUserData.ts";
+import DatasetGuidelines from "./DatasetGuidelines.ts";
 
-interface DatasetListItemData {
+interface DatasetDetailData {
     id: string;
     task: DatasetTask;
     name: string;
     description: string;
+    guidelines: DatasetGuidelines
     coverImageUrl: string;
     tags: string[];
     createdAt: number;
@@ -17,4 +19,4 @@ interface DatasetListItemData {
     owner: SiteUserData;
 }
 
-export default DatasetListItemData;
+export default DatasetDetailData;
