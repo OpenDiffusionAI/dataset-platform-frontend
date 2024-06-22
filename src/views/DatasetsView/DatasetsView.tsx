@@ -2,14 +2,35 @@ import {Button, Input, Pagination} from "@nextui-org/react";
 import {MagnifyingGlassIcon} from "@heroicons/react/20/solid";
 import DatasetListItem from "./DatasetListItem/DatasetListItem.tsx";
 import {faker} from "@faker-js/faker";
-import {ChevronRightIcon} from "@heroicons/react/16/solid";
 import {useEffect, useState} from "react";
 import numeral from 'numeral'
 import DatasetListItemData from "../../types/DatasetListItemData.ts";
+import {useSearchParams} from "react-router-dom";
 
 type QueryStatistics = {
     results: number;
     time: number;
+}
+
+const ipsumDataset: DatasetListItemData = {
+    id: faker.string.uuid(),
+    name: 'OpenDiffusion',
+    description: 'A dataset focused on achieving pixel precision for sharper images. A dataset focused on achieving pixel precision for sharper images. A dataset focused on achieving pixel precision for sharper images.',
+    coverImageUrl: '',
+    tags: ['Pixel Precision'],
+    size: 40090,
+    completionGoal: 50000,
+    completionAmount: 3000,
+    open: true,
+    task: 'image-labeling',
+    createdAt: faker.date.recent().getTime(),
+    updatedAt: faker.date.recent().getTime(),
+    owner: {
+        id: faker.string.uuid(),
+        username: faker.internet.userName(),
+        avatarUrl: '',
+        verified: false
+    }
 }
 
 const ipsumDatasets: DatasetListItemData[] = [
@@ -30,7 +51,7 @@ const ipsumDatasets: DatasetListItemData[] = [
             id: faker.string.uuid(),
             username: faker.internet.userName(),
             avatarUrl: faker.image.avatar(),
-            verified: true
+            verified: false
         }
     },
     {
@@ -57,28 +78,49 @@ const ipsumDatasets: DatasetListItemData[] = [
 
 const DatasetsView = () => {
 
-    const [searchQuery, setSearchQuery] = useState('')
+    const [searchParams] = useSearchParams()
+    const search = searchParams.get('q') ?? ""
+
+    const [searchQuery, setSearchQuery] = useState(search)
     const [queryStatistics, setQueryStatistics] = useState<QueryStatistics | null>(null)
-    const [datasets, setDatasets] = useState<DatasetListItemData[]>(ipsumDatasets)
+    const [datasets, setDatasets] = useState<DatasetListItemData[] | null>(null)
+    const [isLoadingItems, setIsLoadingItems] = useState(false)
 
 
-    const requestDatasets = async () => {
+    const isLoading = !datasets || isLoadingItems
 
+
+    const requestDatasets = async (query?: string='') => {
+        setIsLoadingItems(true)
         await new Promise(resolve => setTimeout(resolve, faker.number.int({min: 200, max: 500})))
 
+        const datasets = ipsumDatasets
+        setDatasets(datasets)
+        setIsLoadingItems(false)
+
+        return datasets
+    }
+
+    const performSearch = async () => {
+        const startingTime = Date.now()
+        const datasetResults = await requestDatasets(searchQuery)
+
+        const elapsedTime = Date.now() - startingTime
+
         setQueryStatistics({
-            results: faker.number.int({min: 0, max: 100}),
-            time: faker.number.float({min: 0.1, max: 1.5})
+            results: numeral(datasetResults.length).format('0,'),
+            time: numeral(elapsedTime / 1000).format('0.0')
         })
+
     }
 
     useEffect(() => {
 
         const delayDebounceFn = setTimeout(() => {
-            if(searchQuery === '')
-                return
+            // if(searchQuery === '')
+            //     return
 
-            requestDatasets()
+            performSearch()
                 .then(() => {
                     // Handle success
                 })
@@ -88,6 +130,14 @@ const DatasetsView = () => {
 
     }, [searchQuery]);
 
+    // useEffect(() => {
+    //     if(searchQuery !== '')
+    //         return
+    //
+    //     requestDatasets(searchQuery)
+    //         .then(() => {})
+    // }, []);
+
     return <div className="px-8 py-8 flex items-center  flex-col grow">
 
         <div className="max-w-screen-lg w-full space-y-8 flex flex-col h-fit grow">
@@ -96,6 +146,7 @@ const DatasetsView = () => {
             <div className="space-y-4">
 
                 <Input
+                    value={searchQuery}
                     onValueChange={setSearchQuery}
                     // label="Search"
                     autoCorrect={'off'}
@@ -129,6 +180,7 @@ const DatasetsView = () => {
                     }
                     endContent={
                         <Button
+                            onClick={performSearch}
                             size="sm"
                             radius="full"
                             variant="light"
@@ -138,7 +190,6 @@ const DatasetsView = () => {
                             Search
                         </Button>
                     }
-                    onClick={requestDatasets}
                 />
 
                 {
@@ -157,6 +208,16 @@ const DatasetsView = () => {
             <div className="space-y-6 grow">
 
                 {
+                    isLoading &&
+                    [1, 2, 3, 4].map((i) => <DatasetListItem
+                        key={i}
+                        dataset={ipsumDataset}
+                        isLoaded={false}
+                    />)
+                }
+
+                {
+                    !isLoading &&
                     datasets.map((dataset, i) =>
                         <DatasetListItem
                             key={i}
@@ -167,7 +228,10 @@ const DatasetsView = () => {
 
             </div>
 
-            <Pagination showControls total={10} initialPage={1} className="self-center" />
+            {
+                datasets &&
+                <Pagination showControls total={10} initialPage={1} className="self-center" />
+            }
 
         </div>
     </div>

@@ -12,14 +12,14 @@ const HomeView = () => {
             <div className="self-center inline-flex flex-col items-center gap-24">
 
 
-                <h1 className="text-6xl font-bold">
+                <h1 className="text-3xl md:text-6xl font-bold">
                     We are <TypeAnimation
                     sequence={[
                         // Same substring at the start will only be typed out once, initially
                         'Open Diffusion AI',
                         1000
                     ]}
-                    className="text-9xl"
+                    className="text-6xl md:text-9xl"
                     wrapper="span"
                     speed={50}
                     style={{ display: 'block' }}
@@ -27,7 +27,7 @@ const HomeView = () => {
                 />
                 </h1>
 
-                <h2 className="text-3xl font-bold text-primary">
+                <h2 className="text-xl md:text-3xl font-bold text-primary">
 
                     <TypeAnimation
                         sequence={[
