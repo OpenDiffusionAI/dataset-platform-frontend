@@ -38,20 +38,20 @@ const DatasetListItem = ({dataset, isLoaded = true}: {dataset: DatasetListItemDa
 
                         <div className="flex gap-3">
 
-                            <NavLink
-                                // href={`/dataset/${dataset.id}`}
-                                to={`/dataset/${dataset.id}`}
-                            >
                                 <Skeleton isLoaded={isLoaded} className="rounded-lg">
                                     <div className="inline-flex gap-x-2 items-center">
                                         <SiteUserSummary user={dataset.owner} isLoaded={isLoaded} showAvatar={false}/>
 
                                         <span>/</span>
 
+                                        <NavLink
+                                            // href={`/dataset/${dataset.id}`}
+                                            to={`/dataset/${dataset.id}`}
+                                        >
                                         <p className="font-semibold text-default-foreground">{dataset.name}</p>
+                                        </NavLink>
                                     </div>
                                 </Skeleton>
-                            </NavLink>
 
                             {
                                 isLoaded &&
