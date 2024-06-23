@@ -83,6 +83,8 @@ const DatasetDetailView = ({datasetId}: {datasetId: string}) => {
 
     const isLoaded = dataset !== undefined
 
+    const imageGuidelines = dataset ? dataset.guidelines as ImageLabelingGuidelines : undefined
+
     const descriptionSections: DescriptionSection[] = [
         {
             title: 'Description',
@@ -91,22 +93,22 @@ const DatasetDetailView = ({datasetId}: {datasetId: string}) => {
         {
             title: 'Image guidelines',
             icon: <CameraIcon className="w-4 h-4 text-primary"/>,
-            content: (dataset?.guidelines as ImageLabelingGuidelines).imageGuidelines ?? "Lorem ipsum"
+            content: imageGuidelines?.imageGuidelines ?? "Lorem ipsum"
         },
         {
             title: 'Labeling guidelines',
             icon: <TagIcon className="w-4 h-4 text-danger"/>,
-            content: (dataset?.guidelines as ImageLabelingGuidelines).labelingGuidelines ?? "Lorem ipsum"
+            content: imageGuidelines?.labelingGuidelines ?? "Lorem ipsum"
         },
         {
             title: 'Content maturity guidelines',
             icon: <ExclamationTriangleIcon className="w-4 h-4 text-warning"/>,
-            content: (dataset?.guidelines as ImageLabelingGuidelines).maturityGuidelines ?? "Lorem ipsum"
+            content: imageGuidelines?.maturityGuidelines ?? "Lorem ipsum"
         },
         {
             title: 'Vision Language Model (VLM) guidelines',
             icon: <EyeIcon className="w-4 h-4 text-secondary"/>,
-            content: (dataset?.guidelines as ImageLabelingGuidelines).vlmGuidelines ?? "Lorem ipsum"
+            content: imageGuidelines?.vlmGuidelines ?? "Lorem ipsum"
         }
     ]
 
