@@ -31,7 +31,8 @@ import DatasetDetailData from "../../types/DatasetDetailData.ts";
 import ImageLabelingGuidelines from "../../types/ImageLabelingGuidelines.ts";
 import ImageLabelingDatasetPreview from "./DatasetPreview/ImageLabelingDatasetPreview.tsx";
 import ImageLabelingAction from "../../types/ImageLabelingAction.ts";
-import ArtifactsView from "./DatasetPreview/ArtifactsView.tsx";
+import ArtifactsView from "./ArtifactsView.tsx";
+import UploadImagesView from "./UploadImagesView.tsx";
 
 const ipsumUser: SiteUserData = {
     id: faker.string.uuid(),
@@ -384,18 +385,19 @@ const DatasetDetailView = ({datasetId}: {datasetId: string}) => {
                                 </div>
                             </Button>
 
-                            <Button
-                                className="w-[250px] h-16 flex"
-                                startContent={<ArrowUpTrayIcon className="w-5 h-5"/>}
-                                variant="flat"
-                                color="primary"
-                            >
-                                <div className="inline-flex flex-col items-start">
+                            {/*<Button*/}
+                            {/*    className="w-[250px] h-16 flex"*/}
+                            {/*    startContent={<ArrowUpTrayIcon className="w-5 h-5"/>}*/}
+                            {/*    variant="flat"*/}
+                            {/*    color="primary"*/}
+                            {/*>*/}
+                            {/*    <div className="inline-flex flex-col items-start">*/}
 
-                                    <p className="font-medium">Upload images</p>
-                                    <p className="text-tiny">Help dataset reach size goals</p>
-                                </div>
-                            </Button>
+                            {/*        <p className="font-medium">Upload images</p>*/}
+                            {/*        <p className="text-tiny">Help dataset reach size goals</p>*/}
+                            {/*    </div>*/}
+                            {/*</Button>*/}
+                            <UploadImagesView/>
 
                             <Skeleton isLoaded={isLoaded} className="rounded-lg">
                                 <Card shadow="sm">
