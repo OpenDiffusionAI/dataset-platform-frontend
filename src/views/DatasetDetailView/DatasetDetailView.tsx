@@ -26,9 +26,12 @@ import {
 import {NavLink, useLocation} from "react-router-dom";
 import numeral from 'numeral'
 import TimestampFormat from "../../utils/TimestampFormat.ts";
-import {PencilSquareIcon} from "@heroicons/react/20/solid";
+import {ArrowUpTrayIcon, PencilSquareIcon} from "@heroicons/react/20/solid";
 import DatasetDetailData from "../../types/DatasetDetailData.ts";
 import ImageLabelingGuidelines from "../../types/ImageLabelingGuidelines.ts";
+import ImageLabelingDatasetPreview from "./DatasetPreview/ImageLabelingDatasetPreview.tsx";
+import ImageLabelingAction from "../../types/ImageLabelingAction.ts";
+import ArtifactsView from "./DatasetPreview/ArtifactsView.tsx";
 
 const ipsumUser: SiteUserData = {
     id: faker.string.uuid(),
@@ -59,6 +62,48 @@ const ipsumDataset: DatasetDetailData = {
         vlmGuidelines: "AI generated image labeling must be done with CogVLM."
     } as ImageLabelingGuidelines
 }
+
+const ipsumLabelingActionFactory = () => {
+    return {
+        id: faker.string.uuid(),
+        imageUrl: faker.image.url(),
+        descriptions: {
+            tags: {
+                'cogvlm': 'cat, animal, table',
+            },
+            naturalLanguage: {
+                'cogvlm': 'A cat sitting on a wooden table',
+            }
+        },
+        metaAttributes: {
+            // width: '1920',
+            // height: '1080',
+            // format: 'jpeg'
+            style: 'realistic',
+            artist: 'AI',
+        },
+        wasHumanReviewed: faker.datatype.boolean(),
+        wasHumanEdited: faker.datatype.boolean(),
+        maturityRating: {
+            nsfw: faker.datatype.boolean({probability: 0.2}) ? 'not-rated' :
+                faker.datatype.boolean({probability: 0.2}) ? 'safe' :
+                    faker.datatype.boolean({probability: 0.2}) ? 'explicit' : 'suggestive',
+            violence: faker.datatype.boolean({probability: 0.2}) ? 'not-rated' :
+                faker.datatype.boolean({probability: 0.2}) ? 'none' :
+                    faker.datatype.boolean({probability: 0.2}) ? 'extreme' : 'mild',
+            gore: faker.datatype.boolean({probability: 0.2}) ? 'not-rated' :
+                faker.datatype.boolean({probability: 0.2}) ? 'none' :
+                    faker.datatype.boolean({probability: 0.2}) ? 'extreme' : 'mild',
+        },
+        hasHumanGeneratedMaturityRating: faker.datatype.boolean(),
+        quality: faker.number.int({min: 0, max: 5}),
+        vlms: ['cogvlm-4b', 'gpt-4v', 'florence2', 'internvl-chat-26B'],
+        elapsedSeconds: faker.number.int({min: 5, max: 30})
+    } as ImageLabelingAction
+
+}
+
+const ipsumLabelingActions = Array.from({length: 50}).map(() => ipsumLabelingActionFactory())
 
 type DescriptionSection = {
     title: string;
@@ -149,78 +194,89 @@ const DatasetDetailView = ({datasetId}: {datasetId: string}) => {
                     </Skeleton>
 
 
-                    <div className="inline-flex gap-6">
+                    {
+                        hashKey !== 'dataset-preview' &&
 
-                        <div className="flex gap-2 flex-col">
+                        <div className="inline-flex gap-6">
 
-                            <span className="text-default-500 text-xs">Status</span>
+                            <div className="flex gap-2 flex-col">
 
-                            <Chip variant={dataset?.open ? "shadow" : 'flat'} size="sm"
-                                  color={dataset?.open ? "primary" : "default"} radius="sm">
-                                {dataset?.open ? "Open" : 'Closed'}
-                            </Chip>
-                        </div>
+                                <span className="text-default-500 text-xs">Status</span>
 
-                        <div className="flex gap-2 flex-col">
+                                <Chip variant={dataset?.open ? "shadow" : 'flat'} size="sm"
+                                      color={dataset?.open ? "primary" : "default"} radius="sm">
+                                    {dataset?.open ? "Open" : 'Closed'}
+                                </Chip>
+                            </div>
 
-                            <span className="text-default-500 text-xs">Task</span>
+                            <div className="flex gap-2 flex-col">
 
-                            <div className="flex gap-3 flex-wrap items-center">
-                                {
-                                    isLoaded &&
-                                    <>
-                                        <Chip variant="shadow" size="sm" color="secondary" radius="sm">
-                                            {DatasetTaskLocalizations.getTaskName(dataset.task)}
-                                        </Chip>
-                                    </>
-                                }
+                                <span className="text-default-500 text-xs">Task</span>
+
+                                <div className="flex gap-3 flex-wrap items-center">
+                                    {
+                                        isLoaded &&
+                                        <>
+                                            <Chip variant="shadow" size="sm" color="secondary" radius="sm">
+                                                {DatasetTaskLocalizations.getTaskName(dataset.task)}
+                                            </Chip>
+                                        </>
+                                    }
+                                </div>
+                            </div>
+
+                            <div className="flex gap-2 flex-col">
+
+                                <span className="text-default-500 text-xs">License</span>
+
+                                <div className="flex gap-3 flex-wrap items-center">
+                                    {
+                                        isLoaded &&
+                                        <>
+                                            <Popover placement="bottom" showArrow={true}>
+                                                <PopoverTrigger>
+                                                    <Button variant="shadow" size="sm" color="default" radius="sm"
+                                                            className="px-2 h-6">
+                                                        <span>cc-by-4.0</span>
+                                                    </Button>
+                                                </PopoverTrigger>
+                                                <PopoverContent>
+                                                    <div className="px-1 py-2">
+                                                        <div className="text-small font-bold">Learn more</div>
+                                                        <Link target="_blank"
+                                                              href="https://choosealicense.com/licenses/cc-by-4.0/">
+                                                            <div className="text-tiny">choosealicense.com</div>
+                                                        </Link>
+                                                    </div>
+                                                </PopoverContent>
+                                            </Popover>
+                                        </>
+                                    }
+                                </div>
                             </div>
                         </div>
-
-                        <div className="flex gap-2 flex-col">
-
-                            <span className="text-default-500 text-xs">License</span>
-
-                            <div className="flex gap-3 flex-wrap items-center">
-                                {
-                                    isLoaded &&
-                                    <>
-                                        <Popover placement="bottom" showArrow={true} >
-                                            <PopoverTrigger>
-                                                <Button variant="shadow" size="sm" color="default" radius="sm" className="px-2 h-6">
-                                                    <span>cc-by-4.0</span>
-                                                </Button>
-                                            </PopoverTrigger>
-                                            <PopoverContent>
-                                                <div className="px-1 py-2">
-                                                    <div className="text-small font-bold">Learn more</div>
-                                                    <Link target="_blank" href="https://choosealicense.com/licenses/cc-by-4.0/"><div className="text-tiny">choosealicense.com</div></Link>
-                                                </div>
-                                            </PopoverContent>
-                                        </Popover>
-                                    </>
-                                }
-                            </div>
-                        </div>
-                    </div>
+                    }
 
 
                     <div className="overflow-auto">
 
-                        <Tabs variant="underlined" selectedKey={hashKey}  aria-label="Dataset tabs" classNames={{tabList: 'pb-0'}}>
+                        <Tabs variant="underlined" selectedKey={hashKey} aria-label="Dataset tabs"
+                              classNames={{tabList: 'pb-0'}}>
                             <Tab key="about" href="#" title={<div className="inline-flex items-center space-x-3">
                                 <InformationCircleIcon className="w-4 h-4"/>
                                 <span>About</span>
                             </div>}/>
-                            <Tab key="dataset-preview" href="#dataset-preview" title={<div className="inline-flex items-center space-x-3">
-                                <TableCellsIcon className="w-4 h-4"/>
-                                <span>Dataset preview</span>
-                            </div>}/>
-                            <Tab key="artifacts" href="#artifacts" title={<div className="inline-flex items-center space-x-3">
-                                <FolderOpenIcon
-                                    className="w-4 h-4"/>
-                                <span>Artifacts</span>
-                            </div>}/>
+                            <Tab key="dataset-preview" href="#dataset-preview"
+                                 title={<div className="inline-flex items-center space-x-3">
+                                     <TableCellsIcon className="w-4 h-4"/>
+                                     <span>Dataset preview</span>
+                                 </div>}/>
+                            <Tab key="artifacts" href="#artifacts"
+                                 title={<div className="inline-flex items-center space-x-3">
+                                     <FolderOpenIcon
+                                         className="w-4 h-4"/>
+                                     <span>Artifacts</span>
+                                 </div>}/>
                         </Tabs>
                     </div>
                 </div>
@@ -316,7 +372,7 @@ const DatasetDetailView = ({datasetId}: {datasetId: string}) => {
                         <div className="space-y-6 shrink-0">
 
                             <Button
-                                className="w-[250px] h-16"
+                                className="w-[250px] h-16 flex"
                                 startContent={<PencilSquareIcon className="w-5 h-5"/>}
                                 variant="shadow"
                                 color="primary"
@@ -325,6 +381,19 @@ const DatasetDetailView = ({datasetId}: {datasetId: string}) => {
 
                                     <p className="font-medium">Contribute</p>
                                     <p className="text-tiny">Open image labeling editor</p>
+                                </div>
+                            </Button>
+
+                            <Button
+                                className="w-[250px] h-16 flex"
+                                startContent={<ArrowUpTrayIcon className="w-5 h-5"/>}
+                                variant="flat"
+                                color="primary"
+                            >
+                                <div className="inline-flex flex-col items-start">
+
+                                    <p className="font-medium">Upload images</p>
+                                    <p className="text-tiny">Help dataset reach size goals</p>
                                 </div>
                             </Button>
 
@@ -401,6 +470,61 @@ const DatasetDetailView = ({datasetId}: {datasetId: string}) => {
                     </div>
                 </div>
             }
+
+
+            {
+                hashKey === 'dataset-preview' &&
+
+                <div className="grow relative">
+
+                    <div className="absolute top-0 bottom-0 left-0 right-0">
+                        <ImageLabelingDatasetPreview
+                            actions={ipsumLabelingActions}/>
+                    </div>
+
+                </div>
+                // <div className=" gap-x-8 gap-y-4 px-8 py-8 justify-center">
+                //
+                //     <div className="flex-wrap md:flex-nowrap gap-y-8 gap-x-12">
+                //
+                //         <ImageLabelingDatasetPreview actions={
+                //
+                //             Array.from({length: 50}).map(() => ipsumLabelingActionFactory())
+                //         }/>
+                //
+                //     </div>
+                //
+                // </div>
+            }
+
+
+            {
+                hashKey === 'artifacts' &&
+
+                <div className="flex gap-x-8 gap-y-4 px-8 py-8 justify-center">
+
+                    <div className="inline-flex max-w-screen-lg flex-col gap-y-8 gap-x-12 grow">
+
+
+                        {/*<div className="space-y-3">*/}
+
+                        {/*    <Skeleton isLoaded={isLoaded} className="rounded-lg">*/}
+
+                        {/*        <p className="text-sm text-default-500 font-medium">*/}
+                        {/*            Last bundled {TimestampFormat.shortest(dataset?.updatedAt ?? 0)}</p>*/}
+                        {/*    </Skeleton>*/}
+
+                        {/*    <Link href={'#'} color="primary" showAnchorIcon={true}>Download dataset on HuggingFace</Link>*/}
+                        {/*</div>*/}
+
+                        <ArtifactsView/>
+
+
+
+                    </div>
+                </div>
+            }
+
 
         </div>
 
