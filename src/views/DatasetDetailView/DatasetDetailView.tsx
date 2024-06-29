@@ -26,11 +26,12 @@ import {
 import {NavLink, useLocation} from "react-router-dom";
 import numeral from 'numeral'
 import TimestampFormat from "../../utils/TimestampFormat.ts";
-import {PencilSquareIcon} from "@heroicons/react/20/solid";
+import {ArrowUpTrayIcon, PencilSquareIcon} from "@heroicons/react/20/solid";
 import DatasetDetailData from "../../types/DatasetDetailData.ts";
 import ImageLabelingGuidelines from "../../types/ImageLabelingGuidelines.ts";
 import ImageLabelingDatasetPreview from "./DatasetPreview/ImageLabelingDatasetPreview.tsx";
 import ImageLabelingAction from "../../types/ImageLabelingAction.ts";
+import ArtifactsView from "./DatasetPreview/ArtifactsView.tsx";
 
 const ipsumUser: SiteUserData = {
     id: faker.string.uuid(),
@@ -194,7 +195,7 @@ const DatasetDetailView = ({datasetId}: {datasetId: string}) => {
 
 
                     {
-                        hashKey === 'about' &&
+                        hashKey !== 'dataset-preview' &&
 
                         <div className="inline-flex gap-6">
 
@@ -371,7 +372,7 @@ const DatasetDetailView = ({datasetId}: {datasetId: string}) => {
                         <div className="space-y-6 shrink-0">
 
                             <Button
-                                className="w-[250px] h-16"
+                                className="w-[250px] h-16 flex"
                                 startContent={<PencilSquareIcon className="w-5 h-5"/>}
                                 variant="shadow"
                                 color="primary"
@@ -380,6 +381,19 @@ const DatasetDetailView = ({datasetId}: {datasetId: string}) => {
 
                                     <p className="font-medium">Contribute</p>
                                     <p className="text-tiny">Open image labeling editor</p>
+                                </div>
+                            </Button>
+
+                            <Button
+                                className="w-[250px] h-16 flex"
+                                startContent={<ArrowUpTrayIcon className="w-5 h-5"/>}
+                                variant="flat"
+                                color="primary"
+                            >
+                                <div className="inline-flex flex-col items-start">
+
+                                    <p className="font-medium">Upload images</p>
+                                    <p className="text-tiny">Help dataset reach size goals</p>
                                 </div>
                             </Button>
 
@@ -481,6 +495,34 @@ const DatasetDetailView = ({datasetId}: {datasetId: string}) => {
                 //     </div>
                 //
                 // </div>
+            }
+
+
+            {
+                hashKey === 'artifacts' &&
+
+                <div className="flex gap-x-8 gap-y-4 px-8 py-8 justify-center">
+
+                    <div className="inline-flex max-w-screen-lg flex-col gap-y-8 gap-x-12 grow">
+
+
+                        {/*<div className="space-y-3">*/}
+
+                        {/*    <Skeleton isLoaded={isLoaded} className="rounded-lg">*/}
+
+                        {/*        <p className="text-sm text-default-500 font-medium">*/}
+                        {/*            Last bundled {TimestampFormat.shortest(dataset?.updatedAt ?? 0)}</p>*/}
+                        {/*    </Skeleton>*/}
+
+                        {/*    <Link href={'#'} color="primary" showAnchorIcon={true}>Download dataset on HuggingFace</Link>*/}
+                        {/*</div>*/}
+
+                        <ArtifactsView/>
+
+
+
+                    </div>
+                </div>
             }
 
 
