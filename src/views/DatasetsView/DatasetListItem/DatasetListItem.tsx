@@ -34,9 +34,9 @@ const DatasetListItem = ({dataset, isLoaded = true}: {dataset: DatasetListItemDa
 
             <div className="flex flex-col gap-3">
                 <div className="space-y-3">
-                    <div className="space-y-1">
+                    <div className="space-y-2">
 
-                        <div className="flex gap-3">
+                        <div className="flex gap-3 flex-wrap gap-y-1">
 
                                 <Skeleton isLoaded={isLoaded} className="rounded-lg">
                                     <div className="inline-flex gap-x-2 items-center">
@@ -55,16 +55,17 @@ const DatasetListItem = ({dataset, isLoaded = true}: {dataset: DatasetListItemDa
 
                             {
                                 isLoaded &&
-                            <>
-                                <Chip variant="flat" size="sm" color={dataset.open ? "primary" : "default"} radius="sm">
-                                    {dataset.open ? "Open" : 'Closed'}
-                                </Chip>
+                                <div className="flex gap-2 flex-wrap gap-y-1">
+                                    <Chip variant="flat" size="sm" color={dataset.open ? "primary" : "default"}
+                                          radius="sm">
+                                        {dataset.open ? "Open" : 'Closed'}
+                                    </Chip>
 
 
-                                <Chip variant="flat" size="sm" color="secondary" radius="sm">
-                                    {DatasetTaskLocalizations.getTaskName(dataset.task)}
-                                </Chip>
-                            </>
+                                    <Chip variant="flat" size="sm" color="secondary" radius="sm">
+                                        {DatasetTaskLocalizations.getTaskName(dataset.task)}
+                                    </Chip>
+                                </div>
                             }
                         </div>
 

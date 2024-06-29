@@ -4,7 +4,7 @@ import {NavLink} from "react-router-dom";
 import SiteUserData from "../../types/SiteUserData.ts";
 import {useState} from "react";
 
-const SiteUserSummary = ({user, showAvatar=true, isLoaded=true}: {user: SiteUserData, showAvatar?: boolean, isLoaded?: boolean}) => {
+const SiteUserSummary = ({user, showAvatar=true, isLoaded=true, size='sm'}: {user: SiteUserData, showAvatar?: boolean, isLoaded?: boolean, size?: 'sm' | 'md' | 'lg'}) => {
 
     const [isAvatarLoaded, setIsAvatarLoaded] = useState(false)
 
@@ -32,7 +32,7 @@ const SiteUserSummary = ({user, showAvatar=true, isLoaded=true}: {user: SiteUser
                             className="inline-block transition-transform shrink-0"
                             color="primary"
                             name={user.username}
-                            size="sm"
+                            size={size}
                             src={user.avatarUrl}
                         />
                     </Skeleton>

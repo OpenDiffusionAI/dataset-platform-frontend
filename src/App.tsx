@@ -6,6 +6,7 @@ import SiteFooter from "./components/SiteFooter/SiteFooter.tsx";
 import {useEffect, useState} from "react";
 import {useLocation, Location} from "react-router-dom";
 import DatasetDetailView from "./views/DatasetDetailView/DatasetDetailView.tsx";
+import UserProfileView from "./views/UserProfileView.tsx";
 
 function getPathParts(location: Location): string[] {
     return (
@@ -44,7 +45,9 @@ function App() {
                     pathParts[0] === 'datasets' ?
                         <DatasetsView/> :
                         (pathParts[0] === 'dataset' ?
-                            <DatasetDetailView datasetId={pathParts[1]}/> : <></>)
+                            <DatasetDetailView datasetId={pathParts[1]}/> :
+                            (pathParts[0] === 'user' ?
+                                <UserProfileView userId={pathParts[1]}/> : <></>))
             }
 
         </div>
