@@ -26,7 +26,7 @@ import {
 import {NavLink, useLocation} from "react-router-dom";
 import numeral from 'numeral'
 import TimestampFormat from "../../utils/TimestampFormat.ts";
-import {ArrowUpTrayIcon, PencilSquareIcon} from "@heroicons/react/20/solid";
+import {PencilSquareIcon} from "@heroicons/react/20/solid";
 import DatasetDetailData from "../../types/DatasetDetailData.ts";
 import ImageLabelingGuidelines from "../../types/ImageLabelingGuidelines.ts";
 import ImageLabelingDatasetPreview from "./DatasetPreview/ImageLabelingDatasetPreview.tsx";
