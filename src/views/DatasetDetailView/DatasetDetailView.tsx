@@ -33,6 +33,8 @@ import ImageLabelingDatasetPreview from "./DatasetPreview/ImageLabelingDatasetPr
 import ImageLabelingAction from "../../types/ImageLabelingAction.ts";
 import ArtifactsView from "./ArtifactsView.tsx";
 import UploadImagesView from "./UploadImagesView.tsx";
+import {usePathParts} from "../../hooks/usePathParts.tsx";
+import ImageLabelingEditorView from "../ImageLabelingEditorView/ImageLabelingEditorView.tsx";
 
 const ipsumUser: SiteUserData = {
     id: faker.string.uuid(),
@@ -158,8 +160,16 @@ const DatasetDetailView = ({datasetId}: {datasetId: string}) => {
         }
     ]
 
-    const {hash} = useLocation();
+    const {hash, pathname} = useLocation();
     const hashKey = hash !== '' ? hash.substring(1) : 'about'
+
+    const { path, pathParts } = usePathParts();
+
+    const detailPathParts = pathParts.slice(2)
+
+    if(detailPathParts[0] === 'editor') {
+        return <ImageLabelingEditorView/>
+    }
 
     // px-8
     // py-8
@@ -372,18 +382,21 @@ const DatasetDetailView = ({datasetId}: {datasetId: string}) => {
 
                         <div className="space-y-6 shrink-0">
 
-                            <Button
-                                className="w-[250px] h-16 flex"
-                                startContent={<PencilSquareIcon className="w-5 h-5"/>}
-                                variant="shadow"
-                                color="primary"
-                            >
-                                <div className="inline-flex flex-col items-start">
 
-                                    <p className="font-medium">Contribute</p>
-                                    <p className="text-tiny">Open image labeling editor</p>
-                                </div>
-                            </Button>
+                                <Button
+                                    className="w-[250px] h-16 flex"
+                                    startContent={<PencilSquareIcon className="w-5 h-5"/>}
+                                    variant="shadow"
+                                    color="primary"
+                                >
+                                    <NavLink to={path + '/editor'}>
+                                        <div className="inline-flex flex-col items-start">
+
+                                            <p className="font-medium">Contribute</p>
+                                            <p className="text-tiny">Open image labeling editor</p>
+                                        </div>
+                                    </NavLink>
+                                </Button>
 
                             {/*<Button*/}
                             {/*    className="w-[250px] h-16 flex"*/}

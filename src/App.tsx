@@ -7,31 +7,33 @@ import {useEffect, useState} from "react";
 import {useLocation, Location} from "react-router-dom";
 import DatasetDetailView from "./views/DatasetDetailView/DatasetDetailView.tsx";
 import UserProfileView from "./views/UserProfileView.tsx";
+import {usePathParts} from "./hooks/usePathParts.tsx";
 
-function getPathParts(location: Location): string[] {
-    return (
-        location.pathname.startsWith("/") ?
-            location.pathname.substring(1) :
-            location.pathname
-    ).split('/').filter(part => part !== '');
-}
+// function getPathParts(location: Location): string[] {
+//     return (
+//         location.pathname.startsWith("/") ?
+//             location.pathname.substring(1) :
+//             location.pathname
+//     ).split('/').filter(part => part !== '');
+// }
 
 function App() {
 
-    const location = useLocation();
-
-    const [pathParts, setPathParts] = useState<string[]>(getPathParts(location))
-    const [path, setPath] = useState<string>(location.pathname)
-
-
-    useEffect(() => {
-
-        const pathParts = getPathParts(location);
-
-        setPath(location.pathname)
-        setPathParts(pathParts)
-        // console.log('Location changed!', location.pathname);
-    }, [location]);
+    const { path, pathParts } = usePathParts();
+    // const location = useLocation();
+    //
+    // const [pathParts, setPathParts] = useState<string[]>(getPathParts(location))
+    // const [path, setPath] = useState<string>(location.pathname)
+    //
+    //
+    // useEffect(() => {
+    //
+    //     const pathParts = getPathParts(location);
+    //
+    //     setPath(location.pathname)
+    //     setPathParts(pathParts)
+    //     // console.log('Location changed!', location.pathname);
+    // }, [location]);
 
     return (<>
         <div className="min-h-screen flex flex-col">
